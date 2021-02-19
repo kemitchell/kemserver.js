@@ -10,6 +10,10 @@ module.exports = ({ directory }) => (request, response) => {
 
   const url = request.url
   const filePath = path.join(directory, url)
+  const split = filePath.split(path.sep)
+  if (split.some(element => element.startsWith('.'))) {
+    return notFound(request, response)
+  }
   fileExists(filePath, (error, exists) => {
     if (error) return internalError(request, response, error)
     if (exists) return sendFile(filePath)
@@ -18,8 +22,7 @@ module.exports = ({ directory }) => (request, response) => {
     fileExists(filePath + '.html', (error, exists) => {
       if (error) return internalError(request, response, error)
       if (exists) return sendFile(withHTML)
-      response.statusCode = 404
-      response.end('not found')
+      notFound(request, response)
     })
   })
 
@@ -47,4 +50,9 @@ function fileExists (file, callback) {
     }
     callback(null, true)
   })
+}
+
+function notFound (request, response) {
+  response.statusCode = 404
+  response.end('not found')
 }
