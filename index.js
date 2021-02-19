@@ -3,12 +3,14 @@ const fs = require('fs')
 const path = require('path')
 const send = require('send')
 
-module.exports = ({ directory }) => (request, response) => {
+module.exports = ({ directory, test }) => (request, response) => {
   doNotCache(response)
 
   if (request.method !== 'GET') return methodNotAllowed(request, response)
 
   const url = request.url
+  if (test && url === '/500') return internalError(request, response, new Error('test'))
+
   const filePath = path.join(directory, url)
   if (isDotFile(filePath)) return notFound(request, response)
   fileExists(filePath, (error, exists) => {
