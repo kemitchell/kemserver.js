@@ -1,6 +1,6 @@
 {
   "name": "kemserver",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "tiny development HTTP static file server",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
   "repository": "kemitchell/kemserver.js",
@@ -8,7 +8,9 @@
     "index.js",
     "bin.js"
   ],
-  "bin": "./bin.js",
+  "bin": {
+    "kemserver": "bin.js"
+  },
   "license": "BlueOak-1.0.0",
   "dependencies": {
     "do-not-cache": "^1.0.1",
