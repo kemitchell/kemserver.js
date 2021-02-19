@@ -6,7 +6,8 @@
   "repository": "kemitchell/kemserver.js",
   "files": [
     "index.js",
-    "bin.js"
+    "bin.js",
+    "npm-shrinkwrap.json"
   ],
   "bin": {
     "kemserver": "bin.js"
