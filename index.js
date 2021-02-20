@@ -1,7 +1,21 @@
 const doNotCache = require('do-not-cache')
 const fs = require('fs')
 const path = require('path')
-const send = require('send')
+
+const contentTypes = {
+  '.css': 'text/css',
+  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  '.html': 'text/html',
+  '.jpeg': 'image/jpeg',
+  '.jpg': 'image/jpeg',
+  '.js': 'application/javascript',
+  '.odt': 'application/vnd.oasis.opendocument.text',
+  '.pdf': 'application/pdf',
+  '.png': 'image/png',
+  '.rtf': 'text/rtf',
+  '.svg': 'image/svg+xml',
+  '.txt': 'text/plain'
+}
 
 module.exports = ({
   // directory of files to serve
@@ -20,20 +34,31 @@ module.exports = ({
 
   const filePath = path.join(directory, url)
   if (isDotFile(filePath)) return notFound(request, response)
-  fileExists(filePath, (error, exists) => {
+  tryToStream(filePath, (error, stream) => {
     if (error) return internalError(request, response, error)
-    if (exists) return sendFile(filePath)
+    if (stream) return sendFile(filePath, stream)
 
     const withHTML = filePath + '.html'
-    fileExists(filePath + '.html', (error, exists) => {
+    tryToStream(withHTML, (error, stream) => {
       if (error) return internalError(request, response, error)
-      if (exists) return sendFile(withHTML)
-      notFound(request, response)
+      if (stream) return sendFile(withHTML, stream)
+
+      const withIndex = filePath + '/index.html'
+      tryToStream(withIndex, (error, stream) => {
+        if (error) return internalError(request, response, error)
+        if (stream) return sendFile(withIndex, stream)
+        notFound(request, response)
+      })
     })
   })
 
-  function sendFile (filePath) {
-    send(request, filePath).pipe(response)
+  function sendFile (filePath, stream) {
+    const extname = path.extname(filePath).toLowerCase()
+    const contentType = contentTypes[extname]
+    if (contentType) {
+      response.setHeader('Content-Type', contentType)
+    }
+    stream.pipe(response)
   }
 }
 
@@ -43,19 +68,22 @@ function methodNotAllowed (request, response) {
 }
 
 function internalError (request, response, error) {
-  console.error(`Error: ${error.toString()}`)
+  console.error(error)
   response.statusCode = 500
   response.end(`error: ${error.toString()}`)
 }
 
-function fileExists (file, callback) {
-  fs.access(file, fs.constants.R_OK, error => {
-    if (error) {
-      if (error.code === 'ENOENT') return callback(null, false)
-      else return callback(error)
-    }
-    callback(null, true)
-  })
+function tryToStream (file, callback) {
+  const stream = fs.createReadStream(file)
+    .once('error', error => {
+      const code = error.code
+      if (code === 'ENOENT') return callback(null, false)
+      if (code === 'EISDIR') return callback(null, false)
+      return callback(error)
+    })
+    .once('open', () => {
+      callback(null, stream)
+    })
 }
 
 function notFound (request, response) {

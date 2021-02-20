@@ -8,7 +8,7 @@ const rimraf = require('rimraf')
 const spawn = require('child_process').spawn
 const tap = require('tap')
 
-const HTML = 'text/html; charset=UTF-8'
+const HTML = 'text/html'
 
 tap.test('GET /', test => {
   server((port, directory, close) => {
