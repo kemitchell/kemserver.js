@@ -6,11 +6,11 @@ const os = require('os')
 const path = require('path')
 const rimraf = require('rimraf')
 const spawn = require('child_process').spawn
-const tap = require('tap')
+const tape = require('tape')
 
 const HTML = 'text/html'
 
-tap.test('GET /', test => {
+tape.test('GET /', test => {
   server((port, directory, close) => {
     const body = '<p>index</p>'
     const index = path.join(directory, 'index.html')
@@ -35,7 +35,7 @@ tap.test('GET /', test => {
   })
 })
 
-tap.test('GET /apple[.html]', test => {
+tape.test('GET /apple[.html]', test => {
   server((port, directory, close) => {
     const body = '<p>apple</p>'
     const apple = path.join(directory, 'apple.html')
@@ -60,7 +60,7 @@ tap.test('GET /apple[.html]', test => {
   })
 })
 
-tap.test('POST /', test => {
+tape.test('POST /', test => {
   server((port, directory, close) => {
     http.request({ port, method: 'post' })
       .once('response', response => {
@@ -74,7 +74,7 @@ tap.test('POST /', test => {
 
 // This test calls a special test route that only works
 // when the `test` option is set on the handler.
-tap.test('GET /500', test => {
+tape.test('GET /500', test => {
   server((port, directory, close) => {
     http.request({ port, path: '/500' })
       .once('response', response => {
@@ -86,7 +86,7 @@ tap.test('GET /500', test => {
   })
 })
 
-tap.test('GET /nonexistent', test => {
+tape.test('GET /nonexistent', test => {
   server((port, directory, close) => {
     http.request({ port, path: '/nonexistent' })
       .once('response', response => {
@@ -98,7 +98,7 @@ tap.test('GET /nonexistent', test => {
   })
 })
 
-tap.test('CLI', test => {
+tape.test('CLI', test => {
   const tmpdir = path.join(os.tmpdir(), `${meta.name}-test`)
   // Create a temporary directory for the test.
   fs.mkdtemp(tmpdir, (_, directory) => {
@@ -108,7 +108,7 @@ tap.test('CLI', test => {
     fs.writeFile(index, body, error => {
       test.ifError(error, 'no error writing file')
       // Run the CLI to serve the directory.
-      const port = 8080
+      const port = 9999
       const cli = spawn('./bin.js', ['-p', port.toString(), directory])
       cli.stdout.once('data', () => {
         // Request index.html.

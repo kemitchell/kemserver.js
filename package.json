@@ -20,11 +20,10 @@
   "devDependencies": {
     "rimraf": "^2.6.3",
     "standard": "^16.0.3",
-    "tap": "^14.11.0"
+    "tape": "^5.2.0"
   },
   "scripts": {
-    "test": "NODE_ENV=test tap --no-color test.js",
-    "coverage": "NODE_ENV=test tap --no-color --100 test.js",
+    "test": "NODE_ENV=test tape  test.js",
     "lint": "standard",
     "fix": "standard --fix"
   }
