@@ -17,6 +17,7 @@ const args = require('yargs/yargs')(require('yargs/helpers').hideBin(process.arg
   .alias('h', 'help')
   .version()
   .alias('v', 'version')
+  .strict()
   .argv
 
 const server = require('http').createServer(require('./')(args))
