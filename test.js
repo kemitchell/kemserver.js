@@ -97,6 +97,8 @@ tap.test('GET /nonexistent', test => {
   })
 })
 
+// TODO: Add a test that runs the server via bin.js.
+
 function server (callback) {
   // Create a temporary directory for the test.
   const tmpdir = path.join(os.tmpdir(), `${meta.name}-test`)
