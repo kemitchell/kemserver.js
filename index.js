@@ -30,7 +30,7 @@ module.exports = ({
   const url = request.url
 
   // Special route for testing 500 responses.
-  if (test && url === '/500') return internalError(request, response, new Error('test'))
+  if (test && url === '/500') return internalError(request, response)
 
   const filePath = path.join(directory, url)
   if (isDotFile(filePath)) return notFound(request, response)
@@ -68,9 +68,13 @@ function methodNotAllowed (request, response) {
 }
 
 function internalError (request, response, error) {
-  console.error(error)
   response.statusCode = 500
-  response.end(`error: ${error.toString()}`)
+  if (error) {
+    console.error(error)
+    response.end(error.toString())
+  } else {
+    response.end()
+  }
 }
 
 function tryToStream (file, callback) {
