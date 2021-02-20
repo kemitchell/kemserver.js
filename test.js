@@ -110,21 +110,23 @@ tap.test('CLI', test => {
       // Run the CLI to serve the directory.
       const port = 8080
       const cli = spawn('./bin.js', ['-p', port.toString(), directory])
-      // Request index.html.
-      http.request({ port })
-        .once('response', response => {
-          test.equal(response.statusCode, 200, 'Status: 200')
-          test.equal(response.headers['content-type'], HTML, 'Content-Type: HTML')
-          const chunks = []
-          response
-            .on('data', chunk => { chunks.push(chunk) })
-            .once('end', () => {
-              test.equal(Buffer.concat(chunks).toString(), body, 'Body: as written')
-              cli.kill(9)
-              rimraf(directory, () => { test.end() })
-            })
-        })
-        .end()
+      cli.stdout.once('data', () => {
+        // Request index.html.
+        http.request({ port })
+          .once('response', response => {
+            test.equal(response.statusCode, 200, 'Status: 200')
+            test.equal(response.headers['content-type'], HTML, 'Content-Type: HTML')
+            const chunks = []
+            response
+              .on('data', chunk => { chunks.push(chunk) })
+              .once('end', () => {
+                test.equal(Buffer.concat(chunks).toString(), body, 'Body: as written')
+                cli.kill(9)
+                rimraf(directory, () => { test.end() })
+              })
+          })
+          .end()
+      })
     })
   })
 })
