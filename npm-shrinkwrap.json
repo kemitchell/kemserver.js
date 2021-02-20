@@ -1,12 +1,12 @@
 {
   "name": "kemserver",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
       "name": "kemserver",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "license": "BlueOak-1.0.0",
       "dependencies": {
         "do-not-cache": "^1.0.1",
