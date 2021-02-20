@@ -3,12 +3,19 @@ const fs = require('fs')
 const path = require('path')
 const send = require('send')
 
-module.exports = ({ directory, test }) => (request, response) => {
+module.exports = ({
+  // directory of files to serve
+  directory = process.cwd(),
+  // Are we running automated tests?
+  test = false
+}) => (request, response) => {
   doNotCache(response)
 
   if (request.method !== 'GET') return methodNotAllowed(request, response)
 
   const url = request.url
+
+  // Special route for testing 500 responses.
   if (test && url === '/500') return internalError(request, response, new Error('test'))
 
   const filePath = path.join(directory, url)
@@ -38,7 +45,7 @@ function methodNotAllowed (request, response) {
 function internalError (request, response, error) {
   console.error(`Error: ${error.toString()}`)
   response.statusCode = 500
-  response.end(error.toString())
+  response.end(`error: ${error.toString()}`)
 }
 
 function fileExists (file, callback) {
