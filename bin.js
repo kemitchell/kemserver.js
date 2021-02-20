@@ -1,17 +1,21 @@
 #!/usr/bin/env node
 const args = require('yargs/yargs')(require('yargs/helpers').hideBin(process.argv))
-  .usage('Usage: $0 [options]')
-  .option('directory', {
-    alias: 'd',
-    type: 'string',
-    default: '.',
-    description: 'Set directory to serve'
-  })
-  .option('port', {
-    alias: 'p',
-    type: 'number',
-    default: 8080,
-    description: 'Set server port'
+  .usage('Usage: $0 [options] [directory]')
+  .command('$0 [directory]', 'the default command', yargs => {
+    yargs
+      .positional('directory', {
+        type: 'string',
+        normalize: true,
+        default: process.cwd(),
+        description: 'Set directory to serve',
+        defaultDescription: 'CWD'
+      })
+      .option('port', {
+        alias: 'p',
+        type: 'number',
+        default: 8080,
+        description: 'Set server port'
+      })
   })
   .help()
   .alias('h', 'help')
