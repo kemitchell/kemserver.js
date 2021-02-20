@@ -10,7 +10,7 @@ const tape = require('tape')
 
 const HTML = 'text/html'
 
-tape.test('GET /', test => {
+tape.test('GET /[index.html]', test => {
   server((port, directory, close) => {
     const body = '<p>index</p>'
     const index = path.join(directory, 'index.html')
@@ -31,6 +31,34 @@ tape.test('GET /', test => {
             })
         })
         .end()
+    })
+  })
+})
+
+tape.test('GET /subdirectory[/index.html]', test => {
+  server((port, directory, close) => {
+    const body = '<p>index</p>'
+    fs.mkdir(path.join(directory, 'subdirectory'), error => {
+      test.ifError(error, 'no error creating subdirectory')
+      const index = path.join(directory, 'subdirectory', 'index.html')
+      fs.writeFile(index, body, error => {
+        test.ifError(error, 'no error writing file')
+        http.request({ port, path: '/subdirectory' })
+          .once('response', response => {
+            test.equal(response.statusCode, 200, 'Status: 200')
+            test.equal(response.headers['content-type'], HTML, 'Content-Type: HTML')
+            const chunks = []
+            response
+              .on('data', chunk => { chunks.push(chunk) })
+              .once('end', () => {
+                const buffer = Buffer.concat(chunks)
+                test.equal(buffer.toString(), body, 'Body: as written')
+                close()
+                test.end()
+              })
+          })
+          .end()
+      })
     })
   })
 })
