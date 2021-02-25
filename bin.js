@@ -6,6 +6,7 @@ const args = require('yargs/yargs')(require('yargs/helpers').hideBin(process.arg
       .positional('directory', {
         type: 'string',
         normalize: true,
+        coerce: require('path').resolve,
         default: process.cwd(),
         description: 'Set directory to serve',
         defaultDescription: 'CWD'
