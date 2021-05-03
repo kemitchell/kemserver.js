@@ -15,7 +15,7 @@
   "license": "BlueOak-1.0.0",
   "dependencies": {
     "do-not-cache": "^1.0.1",
-    "yargs": "^16.2.0"
+    "yargs": "^17.0.0"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
