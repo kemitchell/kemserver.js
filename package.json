@@ -1,6 +1,6 @@
 {
   "name": "kemserver",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "description": "tiny development HTTP static file server",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
   "repository": "kemitchell/kemserver.js",
