@@ -9,6 +9,7 @@ const contentTypes = {
   '.jpeg': 'image/jpeg',
   '.jpg': 'image/jpeg',
   '.js': 'application/javascript',
+  '.json': 'application/json',
   '.md': 'text/markdown',
   '.odt': 'application/vnd.oasis.opendocument.text',
   '.pdf': 'application/pdf',
