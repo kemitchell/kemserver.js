@@ -20,7 +20,7 @@
   "devDependencies": {
     "rimraf": "^3.0.2",
     "standard": "^16.0.4",
-    "tape": "^5.4.0"
+    "tape": "^5.5.3"
   },
   "scripts": {
     "test": "NODE_ENV=test tape  test.js",
