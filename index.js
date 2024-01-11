@@ -29,7 +29,7 @@ module.exports = ({
 
   if (request.method !== 'GET') return methodNotAllowed(request, response)
 
-  const url = request.url
+  const url = decodeURI(request.url)
 
   // Special route for testing 500 responses.
   if (test && url === '/500') return internalError(request, response)
